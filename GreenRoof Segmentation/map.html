@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azure Maps with Bing Aerial</title>
+  <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+  <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" />
+  <style>
+    #map {
+      width: 600px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+  <button id="maskButton">Toggle Mask</button>
+
+  <script>
+    // Use var for variables you need to expose or explicitly attach to window.
+    var map;
+    var dataSource;
+    var layer;
+    // Attach maskVisible to window so that it is accessible to Playwright.
+    window.maskVisible = false;
+    const azureMapsKey = "8w5BZBtF5s7LAFJ5WA5dMvkmuKVl4tugJM83fXx8vlDN4VNTEhR2JQQJ99BBACi5Ypzf1TnTAAAgAZMP1ztx"; // Your Azure Maps key
+
+    function initMap() {
+      window.map = new atlas.Map("map", {
+        center: [9.19, 45.4642], // Milan, Italy
+        zoom: 19, // Use 18 or 19 for close-up aerial views
+        pitch: 0, // Tilt for better perspective
+        style: "grayscale_light", // Base style (we override with Bing tiles)
+        authOptions: {
+          authType: "subscriptionKey",
+          subscriptionKey: azureMapsKey
+        }
+      });
+
+      window.map.events.add("ready", function () {
+        // Add the custom Bing aerial tile layer
+        let bingTileLayer = new atlas.layer.TileLayer({
+          tileUrl: "http://ak.t0.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?n=z&g=5880",
+          tileSize: 256
+        });
+        window.map.layers.add(bingTileLayer, "background"); // Add under other layers
+
+        // Create a data source for the mask layer
+        dataSource = new atlas.source.DataSource();
+        window.map.sources.add(dataSource);
+
+        // Load GeoJSON data
+        fetch("./cleaned_potentialGR.geojson")
+          .then(response => response.json())
+          .then(data => {
+            dataSource.add(data);
+          });
+
+        // Create a polygon layer (mask) using the global maskVisible state
+        layer = new atlas.layer.PolygonLayer(dataSource, null, {
+            fillColor: "rgba(255, 0, 255, 100)", // Bright fuchsia with full transparency
+          strokeColor: "green",
+          fillOpacity: 1,
+          strokeWidth: 2,
+          visible: window.maskVisible
+        });
+        window.map.layers.add(layer);
+      });
+    }
+
+    // Toggle the mask layer visibility and update the global variable.
+    function setMask(vis) {
+      if (layer) {
+        layer.setOptions({
+          visible: vis
+        });
+        window.maskVisible = vis;
+      }
+    }
+    // Expose the function on the global object so that captureMap.js can call it.
+    window.setMask = setMask;
+
+    // Button event listener for manual toggling.
+    document.getElementById("maskButton").addEventListener("click", () => {
+      setMask(!window.maskVisible);
+    });
+
+    window.onload = initMap;
+  </script>
+
+</body>
+</html>
