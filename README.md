@@ -17,8 +17,6 @@ In **2020**, **58.2% of Milan’s municipal surface** was covered by artificial 
 This reduced soil absorption capacity increases **surface runoff during heavy rainfall**, overloading sewer systems and raising the risk of urban flooding.  
 For example, in **October 2024**, Milan recorded **160 liters of rain per square meter in just 10 days**, **double the monthly average**, causing the **Lambro River to overflow** ([Icona Clima](https://www.iconaclima.it/meteo/notizie-italia/esonda-il-lambro-a-milano-in-10-giorni-caduti-160-litri-di-pioggia-per-metro-quadro/)).
 
----
-
 ## Green Roofs as a Solution
 
 **Green roofs**, or vegetated roof systems, offer an effective response to both challenges.
@@ -41,7 +39,13 @@ This process significantly decreases the risk of **urban flooding**, especially 
 
 ---
 
-### Conclusion
+## Projects in this Repository
 
-Implementing **green roofs in Milan** not only directly addresses **pollution and flooding issues**, but also helps create a **more sustainable and livable urban environment**.
+Implementing **green roofs in Milan** not only directly addresses **pollution and flooding issues**, but also helps create a **more sustainable and livable urban environment**.  
+This repository contains **two different projects**, both of which share the common goal of **helping Milan transition towards a greener future through rooftop vegetation**.
 
+#### GreenRoof Optimizer
+An intelligent advisor that analyzes precipitation, temperature, and pollution data across Milan to recommend which rooftops should be converted into green roofs. The system prioritizes locations that maximize environmental benefits and optimizes the transition from potential green roofs to actual green spaces within a given budget.
+
+#### GreenRoof Segmentation
+A deep learning model that performs pixel-wise segmentation on high-resolution satellite images, classifying each pixel as either a potential green roof or something else. This enables precise identification of rooftops suitable for green roof conversion.
