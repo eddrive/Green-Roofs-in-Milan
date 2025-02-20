@@ -1,88 +1,31 @@
-# Requirements
+# GreenRoof Segmentation
+This repository contains a deep learning model that performs pixel-wise segmentation on high-resolution satellite images, classifying each pixel as either a potential green roof or something else. This enables precise identification of rooftops suitable for green roof conversion.
 
-- Node.js (tested with v18.0.0)
-- Python 3 (tested with 3.12.4)
+---
 
-# Dataset
+## Table of Contents
+- [Dataset](#dataset)
+- [Deep Learning Model](#deep-learning-model)
+- [Future Developments](future-developments)
+- [Requirements](#requirements)
+- [Usage](#usage)
 
-### Installation
-
-```sh
-npm install
-npx playwright install
-```
-
-### Usage (dataset creation)
-
-Start the local server:
-
-```sh
-serve
-```
-
-copy the port number and paste it in the `captureMap.js` file.
-
-Run the dataset creation script:
-
-```sh
-node captureMap.js
-```
-# Models
-
-### Installation
-
-install python dependencies (might not be an exhaustive list)
-
-```sh
-pip install -r requirements.txt
-```
-
-
-### train the models
-
-run the preprocessing script to prepare the dataset for training
-
-```sh
-python3 preprocessing.py
-```
-
-move to the models directory
-
-to train DeepLabV3+ with ResNet50:
-
-```sh
-python3 DeepLabV3.py
-```
-
-to train EfficientNetB7:
-
-```sh
-python3 EfficientNetB7.py
-```
-
-it's possible to change models parameters (like epoch and batch size) directly in the scripts
-
-### Usage
-
-to use both models and the ensemble model, use the Evaluation notebook (be sure to modify it with the correct models file paths)
-
-it's possible to use the already trained models present in the folder `Model`
-
-# Report
-## Data Collection and Preprocessing
-### 1. Already Available Data
-The core of the dataset is a GeoJson file (`cleaned_potentialGR.geojson`) provided by the municipality of Milan containing the coordinates of roofs that can be potential green areas. We cleaned it and reformatted it to make it usable for our purpose.
+## Dataset
+### 1. Ground Truth Data
+The starting point of this project was to establish a ground truth that could provide reliable information about which rooftops could potentially be converted into green roofs. This was made possible thanks to a [GeoJSON file](https://dati.comune.milano.it/dataset/ds1446_tetti-verdi-potenziali)  provided by the Municipality of Milan, which contains the coordinates of rooftops identified as potential green areas. We processed and cleaned this dataset to make it suitable for our analysis.
 
 ### 2. Choice of underlying Satellite Imagery
-We tried to overlay the geojson on different satellite maps, we tried Google Maps, Microsoft Azure maps (ex. Bing Maps), and OpenStreetMap. We found that Azure was the best candidate for our purpose, as it provided not only high-res aerial imagery but the coordinates of our geojson aligned the best with their maps.
+Once we obtained the GeoJSON file, we needed to use it as a mask on satellite images of Milan to generate the dataset required for training our model. This meant that we had to find high-resolution satellite images that aligned well with our GeoJSON data. However, this proved to be challenging since not many high-resolution satellite maps are publicly available. Additionally, some sources, like Google Maps, had a significant misalignment with our GeoJSON data, making them unsuitable for our needs.
+
+We experimented with overlaying the GeoJSON on different satellite maps, testing Google Maps, Microsoft Azure Maps (formerly Bing Maps), and OpenStreetMap. After thorough evaluation, we found that Azure Maps was the best candidate, as it provided both high-resolution aerial imagery and the best alignment between our GeoJSON coordinates and the satellite images. 
 | Azure Map               | Google Map                 |
 |-------------------------|----------------------------|
 | ![Azure Map](images/azure.jpg) | ![Google Map](images/google.jpg) |
 
 ### 3. Map preparation
-we decided to create a simple webapp, `map.html` to visualize the map with the option to pan and to enable or disable the geojson mask, we went with this option because azure maps is mostly built to be used on the web, so this was the most documented and straightforward way to use it.
+We decided to create a simple webapp, `map.html` to visualize the map with the option to pan and to enable or disable the geojson mask, we went with this option because azure maps is mostly built to be used on the web, so this was the most documented and straightforward way to use it.
 
-it is possible to see this map by running the `serve` command and opening `localhost:3000/map.html` (or equivalent port on your device) in the browser.
+It is possible to see this map by running the `serve` command and opening `localhost:3000/map.html` (or equivalent port on your device) in the browser.
 
 ### 4. Dataset collection
 We used Playwright to automate the process of capturing the map and the mask, we created a script `captureMap.js` that captures the map and the mask and saves them in the `dataset` folder.
@@ -97,13 +40,13 @@ Some example images are shown below:
 | ![Image 1](images/45.46002_9.18572.jpg) | ![Image 2](images/45.46002_9.18572-1.jpg) |
 
 ### 5. Dataset Preprocessing
-the previous script saves "raw" 600x600 .png images, for the dataset we used of 5000+5000 images this resulted in a total of around 5GB.
+At this point, the final step to prepare our dataset for training was to process the masks to ensure they contained only binary pixel values (0 and 1). This meant converting them into black and white labels, where 0 (black) represented potential green roofs and 1 (white) represented all other areas. These binary masks would serve as ground truth labels for our model.
 
-We decided to convert them in numpy arrays and save them in a .npz file to save space and to speed up the training process.
+Additionally, we needed to compress the dataset into a more efficient format. The previous script saved raw 600x600 .png images, and with a dataset containing 5000+5000 images, this resulted in a total size of around 5GB.
 
-we also convert the masks to binary masks (1 for non-green area, 0 for green area) as this is the format required by the models. In this way when visualizing the mask with matplotlib possible green areas are shown in black and non-green areas are shown in white.
+To optimize storage and speed up the training process, we decided to convert the images and masks into NumPy arrays and store them in a compressed .npz file. This significantly reduced the dataset size while maintaining efficiency for model training.
 
-
+Below, we provide the function used to convert the screen with the mask into a black and white binary format, along with an example of an input pair (satellite image and corresponding mask) that will be used to train the model.
 
 ```python
 def preprocess_image_and_mask(image_path, mask_path, target_size=(600, 600)):
@@ -121,7 +64,11 @@ def preprocess_image_and_mask(image_path, mask_path, target_size=(600, 600)):
     return image, binary_mask
 ```
 
-## Deep learning Model building
+| Satellite image | Masked image |
+|-----------------|--------------|
+| ![Image 1](images/Sat5.jpeg) | ![Image 2](images/Mask5.jpeg) |
+
+## Deep Learning Model
 
 ### 1. Approach and Methodology
 Once we had our dataset we started building our neural network. To tackle this problem, we employed a **transfer learning** approach. Given the high resolution of the images, we selected architectures that accept 600 × 600 × 3 input dimensions.
@@ -135,8 +82,6 @@ This report details the implementation of both models. For both models, we exper
 - Binary Cross-Entropy (BCE): This is the standard loss function for binary classification problems. It measures the difference between predicted probabilities and actual labels, penalizing incorrect predictions linearly.
 
 - Focal Loss: A variation of BCE that introduces a focusing parameter (gamma) to reduce the relative importance of well-classified examples, thereby helping to handle class imbalance in segmentation tasks.
-
----
 
 ### 2. Model Architectures
 
@@ -190,10 +135,6 @@ early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, r
 |---------------------------------|---------------------------------|---------------------------------|
 | ![Image 1](images/Sat1.jpeg) | ![Image 2](images/Mask1.jpeg) | ![Image 3](images/Eff1.jpeg) |
 | ![Image 4](images/Sat2.jpeg) | ![Image 5](images/Mask2.jpeg) | ![Image 6](images/Eff2.jpeg) |
-
-
-
----
 
 #### 2.2. DeepLabV3+ with ResNet50
 The second approach used DeepLabV3+, an advanced semantic segmentation model that builds on DeepLabV3 by adding a decoder module for improved boundary refinement. It employs ResNet50 as a backbone for feature extraction, utilizing its deep residual connections to capture hierarchical features at different levels.
@@ -271,7 +212,6 @@ early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, r
 |---------------------------------|---------------------------------|---------------------------------|
 | ![Image 1](images/Sat1.jpeg) | ![Image 2](images/Mask1.jpeg) | ![Image 3](images/Res1.jpeg) |
 | ![Image 4](images/Sat2.jpeg) | ![Image 5](images/Mask2.jpeg) | ![Image 6](images/Res2.jpeg) |
----
 
 ### 3. Ensamble Model
 Given the poor results achieved by the models in the IoU metric, we thought of combining the two to create an ensemble. By combining the predictions of both models and computing their average, we observed a significant improvement in segmentation performance. This ensemble approach leverages the strengths of both architectures: the robust feature extraction of EfficientNetB7 and the detailed spatial understanding of DeepLabV3+. The final output benefits from a more balanced segmentation with improved boundary refinement and generalization capabilities.
@@ -287,3 +227,108 @@ Given the poor results achieved by the models in the IoU metric, we thought of c
 |---------------------------------|---------------------------------|---------------------------------|
 | ![Image 1](images/Sat1.jpeg) | ![Image 2](images/Mask1.jpeg) | ![Image 3](images/Ens1.jpeg) |
 | ![Image 4](images/Sat2.jpeg) | ![Image 5](images/Mask2.jpeg) | ![Image 6](images/Ens2.jpeg) |
+
+## Future Developments
+The results obtained in this project demonstrate the feasibility of using deep learning for automatic green roof segmentation from high-resolution satellite imagery. However, there are several directions in which the model could be further improved and extended to enhance its generalization and usability.
+### Testing on Other Cities
+Currently, the model has been trained and tested using data from Milan, where both the satellite images and the ground truth masks were well-aligned. A crucial next step would be to evaluate the model's performance on images from different cities to assess how well it generalizes to new environments.
+
+- If the model performs well, it confirms its robustness in different urban landscapes.
+- If the model struggles, it may indicate a need for fine-tuning or retraining using data from diverse locations.
+By incorporating data from multiple cities, the model could become more adaptable, reducing bias towards a single geographic region.
+### Improving Mask Post-Processing
+The current output of the model consists of pixel-wise binary segmentation masks, which are useful for classification but lack geometric precision. In practice, green roofs are best represented as polygonal shapes rather than rasterized masks.
+
+A possible future improvement is to apply post-processing techniques to refine the segmentation results:
+
+- Polygon Approximation: Convert pixel-based masks into vector-based polygonal representations, making the results more interpretable for urban planners.
+- Morphological Operations: Use techniques such as contour detection and edge smoothing to clean up jagged segmentation outputs.
+This would align the model's output with real-world applications, as city administrations typically work with vector-based GIS data rather than pixel-based masks.
+
+## Requirements
+
+- Node.js (tested with v18.0.0)
+- Python 3 (tested with 3.12.4)
+
+## Usage
+### Dataset Creation Instructions
+To generate the dataset, follow these steps carefully:
+
+#### 1. Install Dependencies
+Before running any script, you need to install the required dependencies. Run the following command in your terminal:
+
+```sh
+npm install
+```
+This will install all necessary Node.js packages listed in the package.json file.
+
+Additionally, the dataset generation process uses Playwright, a tool for browser automation. To install Playwright, run:
+```sh
+npx playwright install
+```
+This ensures that all required browser engines are available for capturing satellite images.
+#### 2. Configure Azure Key
+The script uses Azure Maps for satellite imagery. To enable this, you must replace the placeholder key in the map.html file with your personal Azure Maps key. To obtain an Azure Maps key:
+
+- Go to the [Azure Portal](https://azure.microsoft.com/de-de/get-started/azure-portal/).
+
+- Create a new Azure Maps account if you don’t already have one.
+
+- Navigate to "Keys" and copy your primary key.
+
+- Open map.html and locate the placeholder key in the script.
+
+- Replace it with your actual Azure Maps key.
+
+#### 3. Start the Local Server
+The dataset creation script relies on a local server to load map tiles and capture images. Start the server with:
+```sh
+serve
+```
+After running this command, a port number will be displayed in the terminal (e.g., http://localhost:3000).
+#### 4. Configure the Capture Script
+Copy the port number from the terminal output and paste it into the `captureMap.js`. You will typically need to update a line in the script where the local server address is defined, ensuring the script can properly load the satellite maps.
+#### 5. Run the Dataset Creation Script
+Once the server is running and the correct port is set, execute the dataset generation script:
+```sh
+node captureMap.js
+```
+This script will:
+- Load satellite images from the local server.
+- Capture screenshots of the map tiles.
+- Save the images as part of the dataset for training the model.
+- After execution, your dataset will be available in the specified output directory.
+### Models Training
+
+#### 1. Dependencies Installation
+
+Before training the models, you need to install the necessary Python dependencies. Run the following command:
+
+```sh
+pip install -r requirements.txt
+```
+#### 2. Preprocessing the Dataset
+Before training, the dataset must be preprocessed to ensure it's in the correct format. Run the preprocessing script:
+
+```sh
+python3 preprocessing.py
+```
+This script will convert masks into the correct binary format and save the preprocessed data in the structured format (npz) for training.
+
+#### 3. Train the Models
+You can train the two different deep learning models using the following command:
+
+```sh
+python3 DeepLabV3.py
+```
+This model is based on the DeepLabV3+ architecture and uses ResNet50 as its feature extractor.
+
+```sh
+python3 EfficientNetB7.py
+```
+This model utilizes EfficientNetB7, a highly efficient CNN architecture for feature extraction.
+
+#### 4. Model Inference & Evaluation
+Once the models are trained, you can evaluate them and use them for inference.
+
+To test both trained models and their ensemble version, open and run the Evaluation Notebook.
