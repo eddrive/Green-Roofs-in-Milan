@@ -3,7 +3,7 @@ A smart advisor that analyzes precipitation, temperature, and pollution data acr
 
 ## Table of Contents
 - [Dataset](#dataset)
-- [Data Analysis](#deep-learning-model)
+- [Data Analysis](#data-analysis)
 - [Algorithm](#algorithm)
 - [Future Developments](future-developments)
 - [Requirements](#requirements)
@@ -11,13 +11,12 @@ A smart advisor that analyzes precipitation, temperature, and pollution data acr
 
 ## Dataset
 ### Potential Green Roof
-The starting point of this project was to establish a ground truth that could provide reliable information about which rooftops could potentially be converted into green roofs. This was made possible thanks to a [GeoJSON file](https://dati.comune.milano.it/dataset/ds1446_tetti-verdi-potenziali)  provided by the Municipality of Milan, which contains the coordinates of rooftops identified as potential green areas. We processed and cleaned this dataset to make it suitable for our analysis.
+The starting point of this project was to establish a ground truth that could provide reliable information about which rooftops could potentially be converted into green roofs. This was made possible thanks to a [GeoJSON file](https://dati.comune.milano.it/dataset/ds1446_tetti-verdi-potenziali)  provided by the Municipality of Milan, which contains the coordinates of rooftops identified as potential green areas. The coordinates are also shown along with the area and ownership of the roof that can be publicly owned by the municipality or privately owned, which plays a crucial role in decision-making and project feasibility.
 
 ### Environmental Data
 Naturally, to achieve our objective, we require environmental data from different areas of Milan to evaluate where green roof conversions would be most beneficial. Collecting data from multiple locations allows us to make informed, data-driven decisions regarding the optimal placement of new green roofs.  
 
-The environmental data used in this project was obtained through the official ARPA Lombardia portal:  
-🔗 [ARPA Lombardia - Weather and Climate Data Request](https://www.arpalombardia.it/temi-ambientali/meteo-e-clima/form-richiesta-dati/)  
+The environmental data used in this project was obtained through the official [ARPA Lombardia portal](https://www.arpalombardia.it/temi-ambientali/meteo-e-clima/form-richiesta-dati/)  
 
 The dataset includes time series data collected from multiple monitoring stations between 2017 and the end of 2023, covering the following parameters: temperature, air pollution, river levels and precipitation.
 
@@ -29,6 +28,24 @@ The following image shows the locations of various data collection stations. The
 - 🟡 **Yellow** → River level monitoring stations  
 
 ![Station Position](images/stationPos.png)
+
+## Data Analysis
+At this stage, we averaged each time series for each monitoring station to better understand whether there were substantial environmental differences across different areas of Milan.  
+Our analysis confirmed that these differences do exist, as demonstrated by the three histograms below. These visualizations highlight variations in temperature, pollution levels, and precipitation across different monitoring locations, providing key insights into how environmental factors change throughout the city.  
+
+![Histogram Temperature](images/histTemp.png)  
+*Temperature histogram of monitoring stations in Milan.*
+![Histogram Precipitation](images/histPrec.png)  
+*Precipitation histogram of monitoring stations in Milan.*
+![Histogram Pollution](images/histPoll.png)  
+*Pollution histogram of monitoring stations in Milan.*
+
+
+
+This information is crucial for optimizing green roof placement, as certain areas may benefit more from interventions aimed at **reducing pollution, mitigating heat, or managing excess rainfall**.  
+
+
+
 
 
 ### 2. Choice of underlying Satellite Imagery
