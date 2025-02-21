@@ -31,18 +31,30 @@ The following image shows the locations of various data collection stations. The
 
 ## Data Analysis
 At this stage, we averaged each time series for each monitoring station to better understand whether there were substantial environmental differences across different areas of Milan.  
-Our analysis confirmed that these differences do exist, as demonstrated by the three histograms below. These visualizations highlight variations in temperature, pollution levels, and precipitation across different monitoring locations, providing key insights into how environmental factors change throughout the city.  
+Our analysis confirmed that these differences do exist, as demonstrated by the three histograms below. These visualizations highlight variations in temperature, pollution levels, and precipitation across different monitoring locations, providing key insights into how environmental factors change throughout the city. This information is crucial for optimizing green roof placement, as certain areas may benefit more from interventions aimed at reducing pollution, mitigating heat, or managing excess rainfall.  
 
-![Histogram Temperature](images/histTemp.png)  
-*Temperature histogram of monitoring stations in Milan.*
+### Temperature
+![Histogram Temperature](images/histTemp.png) 
+The histogram illustrates the average temperature recorded at different monitoring stations across Milan. The red bars represent the warmer months (spring-summer), while the blue bars correspond to the cooler months (autumn-winter).
+For this project, we primarily focus on the summer season, as green roofs play a significant role in providing thermal insulation and reducing the urban heat island effect during the hottest months.
+Notably, some locations exhibit higher average temperatures, suggesting that introducing green roofs in these areas could be particularly effective in mitigating extreme heat.
+### Precipitation
 ![Histogram Precipitation](images/histPrec.png)  
-*Precipitation histogram of monitoring stations in Milan.*
+The precipitation data highlights the average rainfall levels recorded at different monitoring stations. The stations marked in dark blue are positioned near major rivers, which is particularly relevant since heavy rainfall in these areas can contribute to urban flooding.
+Green roofs can help absorb and slow down stormwater runoff, preventing excess water from overwhelming drainage systems and reducing the risk of flooding.
+To further analyze the relationship between precipitation and river levels, we performed a cross-correlation analysis, which is displayed below.
+![CC Prec-Riv](images/CCPrecRiv.png) 
+This graph shows the cross-correlation between precipitation levels and river heights at different time lags. The strong correlation at small lags suggests that heavy rainfall events have an almost immediate effect on river levels. This reinforces the importance of placing green roofs near river-adjacent urban areas to help with flood mitigation.
+### Pollution
 ![Histogram Pollution](images/histPoll.png)  
-*Pollution histogram of monitoring stations in Milan.*
+This histogram presents the average NO₂ (Nitrogen Dioxide) pollution levels (µg/m³) measured across different locations in Milan. NO₂ is a major air pollutant, primarily emitted by traffic and industrial activity, and is linked to respiratory diseases and poor urban air quality.
+
+Certain areas, such as Viale Marche and Viale Liguria, exhibit significantly higher NO₂ concentrations, making them prime candidates for green roof interventions aimed at improving air quality.
 
 
 
-This information is crucial for optimizing green roof placement, as certain areas may benefit more from interventions aimed at **reducing pollution, mitigating heat, or managing excess rainfall**.  
+
+
 
 
 
