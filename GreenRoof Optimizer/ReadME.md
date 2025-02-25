@@ -72,13 +72,13 @@ Where:
 ### 3. Normalization of Indices
 Impact indices are normalized to a range between 0 and 1 to ensure comparability. Normalization is performed based on the minimum and maximum values within the dataset:
     
-\[ I' = \frac{I - I_{min}}{I_{max} - I_{min}} \]
+    \[ I' = \frac{I - I_{min}}{I_{max} - I_{min}} \]
     
 Where \( I_{min} \) and \( I_{max} \) are the minimum and maximum values recorded for each index.
 ### 4. Computation of Final Impact Score
 For each rooftop, a final impact score is computed using a weighted average of the three normalized indices (precipitation, temperature, pollution). The weights can be configured based on the priority assigned to each environmental parameter.
     
-\[ I_{final} = P_t \cdot I'_t + P_p \cdot I'_p + P_i \cdot I'_i \]
+    \[ I_{final} = P_t \cdot I'_t + P_p \cdot I'_p + P_i \cdot I'_i \]
     
 Where:
     - \( I'_t \), \( I'_p \), \( I'_i \) are the normalized indices for temperature, precipitation, and pollution.
