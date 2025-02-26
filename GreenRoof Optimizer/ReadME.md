@@ -68,27 +68,30 @@ I = \frac{V_1 \cdot w_1 + V_2 \cdot w_2}{w_1 + w_2}
 ```
     
 Where:
-- $V_1$ and $V_2 $ are the environmental values from the two closest stations
-- \( w_1 \) and \( w_2 \) are the weights, computed as the inverse of the distance between the rooftop and the station (\( w_i = \frac{1}{d_i} \))
+- $V_1$ and $V_2$ are the environmental values from the two closest stations
+- $w_1$ and $w_2$ are the weights, computed as the inverse of the distance between the rooftop and the station (\( w_i = \frac{1}{d_i} \))
 ### 3. Normalization of Indices
 Impact indices are normalized to a range between 0 and 1 to ensure comparability. Normalization is performed based on the minimum and maximum values within the dataset:
+```math
+I' = \frac{I - I_{min}}{I_{max} - I_{min}}
+```
     
-    \[ I' = \frac{I - I_{min}}{I_{max} - I_{min}} \]
-    
-Where \( I_{min} \) and \( I_{max} \) are the minimum and maximum values recorded for each index.
+Where $I_{min}$ and $I_{max}$ are the minimum and maximum values recorded for each index.
 ### 4. Computation of Final Impact Score
-For each rooftop, a final impact score is computed using a weighted average of the three normalized indices (precipitation, temperature, pollution). The weights can be configured based on the priority assigned to each environmental parameter.
-    
-    \[ I_{final} = P_t \cdot I'_t + P_p \cdot I'_p + P_i \cdot I'_i \]
+For each rooftop, a final impact score is computed using a weighted average of the three normalized indices (precipitation, temperature, pollution). The weights can be configured based on the priority assigned to each environmental parameter.    
+```math
+I_{final} = P_t \cdot I'_t + P_p \cdot I'_p + P_i \cdot I'_i
+```
     
 Where:
-    - \( I'_t \), \( I'_p \), \( I'_i \) are the normalized indices for temperature, precipitation, and pollution.
-    - \( P_t \), \( P_p \), \( P_i \) are configurable weights.
+- $I'_t$, $I'_p$, $I'_i$ are the normalized indices for temperature, precipitation, and pollution.
+- $P_t$, $P_p$, $P_i$ are configurable weights.
 ### 5. Selection of Rooftops Based on Budget
 The algorithm receives a budget as input and the desire of choose whether to consider only rooftops owned by the Municipality of Milan or also privately-owned rooftops.
 The conversion cost of a rooftop is computed as:
-    
-    \[ Cost = Area_{roof} \times Cost_{m^2} \]
+```math    
+Cost = Area_{roof} \times Cost_{m^2}
+```
     
 Where the **cost per square meter** is based on a conversion process that includes only the addition of a grass layer.
 Rooftops are sorted by final impact score. The rooftops with the highest impact are selected until the budget is exhausted.
@@ -96,62 +99,6 @@ Rooftops are sorted by final impact score. The rooftops with the highest impact 
 
 
 
-# GreenRoof Optimizer - Algorithm
-
-## General Description
-The *GreenRoof Optimizer* algorithm analyzes environmental data collected from monitoring stations across Milan to determine which rooftops would have the greatest environmental impact if converted into green roofs. The goal is to select the most optimal rooftops based on temperature, precipitation, and pollution criteria while adhering to a predefined budget.
-
-## Algorithm Steps
-
-### 1. Collection and Processing of Environmental Data
-- For each monitoring station, the algorithm calculates the average values of the time series related to each collected environmental parameter:
-  - **Average temperature**
-  - **Precipitation levels**
-  - **NO₂ concentration (Air pollution)**
-- If a station collects multiple parameters (e.g., precipitation and pollution), each parameter is processed separately.
-
-### 2. Computation of Impact Indices for Each Rooftop
-- For each rooftop identified in the GeoJSON dataset provided by the Municipality of Milan:
-  - The **two closest monitoring stations** are identified.
-  - For each environmental parameter (temperature, precipitation, pollution), an **incidence value** is computed using a **weighted average** of the two nearest stations, where the weight is inversely proportional to the rooftop-station distance:
-    
-    \[ I = \frac{V_1 \cdot w_1 + V_2 \cdot w_2}{w_1 + w_2} \]
-    
-    Where:
-    - \( V_1 \) and \( V_2 \) are the environmental values from the two closest stations
-    - \( w_1 \) and \( w_2 \) are the weights, computed as the inverse of the distance between the rooftop and the station (\( w_i = \frac{1}{d_i} \))
-  
-### 3. Normalization of Indices
-- Impact indices are normalized to a range between **0 and 1** to ensure comparability.
-- Normalization is performed based on the minimum and maximum values within the dataset:
-    
-    \[ I' = \frac{I - I_{min}}{I_{max} - I_{min}} \]
-    
-    Where \( I_{min} \) and \( I_{max} \) are the minimum and maximum values recorded for each index.
-
-### 4. Computation of Final Impact Score
-- For each rooftop, a **final impact score** is computed using a **weighted average** of the three normalized indices (precipitation, temperature, pollution).
-- The weights can be configured based on the priority assigned to each environmental parameter.
-    
-    \[ I_{final} = P_t \cdot I'_t + P_p \cdot I'_p + P_i \cdot I'_i \]
-    
-    Where:
-    - \( I'_t \), \( I'_p \), \( I'_i \) are the normalized indices for temperature, precipitation, and pollution.
-    - \( P_t \), \( P_p \), \( P_i \) are configurable weights.
-
-### 5. Selection of Rooftops Based on Budget
-- The algorithm receives a **budget** as input.
-- The conversion cost of a rooftop is computed as:
-    
-    \[ Cost = Area_{roof} \times Cost_{m^2} \]
-    
-    Where the **cost per square meter** is based on a conversion process that includes only the addition of a grass layer.
-- Rooftops are sorted by **final impact score**.
-- The rooftops with the highest impact are selected until the budget is exhausted.
-- It is possible to choose whether to consider only rooftops **owned by the Municipality of Milan** or also **privately-owned rooftops**.
-
-## Conclusion
-The algorithm optimizes the selection of rooftops to be converted into green roofs by maximizing environmental impact. This data-driven approach enhances urban resource management, mitigates the urban heat island effect, reduces flooding risk, and improves air quality. Thanks to the configurable weights and budget constraints, the system can adapt to different urban sustainability strategies.
 
 
 
