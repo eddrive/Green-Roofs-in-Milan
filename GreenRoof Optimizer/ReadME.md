@@ -101,25 +101,30 @@ Rooftops are sorted by final impact score. The rooftops with the highest impact 
 Below, we present two examples showcasing how the algorithm prioritizes green roof placements under different budget constraints. These scenarios illustrate how adjusting the weighting of environmental factors (temperature, pollution, and precipitation) influences the final selection of rooftops for conversion. 
 ### Focus on floods
 In this scenario, we set the weights to prioritize green roof placements that primarily combat urban flooding. By assigning the highest weight to precipitation, the algorithm selects rooftops in areas where excessive rainfall and stormwater management are critical concerns.
+
 | Input | Value | 
 |:---------:|:---------:|
 |  Budget  |  10'000'000€  |
 |  Temperature weight  |  2  |
 |  Pollution weight  |  1  |
 |  Precipitation weight  |  5  |
+
 The following maps depict the selected rooftops, differentiating between those owned exclusively by the Municipality of Milan and those including privately owned buildings.
+
 | Only municipally owned roofs | Any roof | 
 |:---------:|:---------:|
 |  ![10MilCom](images/10MilCom.png)  |  ![10MilPriv](images/10MilPriv.png) |
 
 ### Focus on all three issues
 In this scenario, we distribute equal weight across temperature reduction, pollution mitigation, and precipitation management. This approach allows the algorithm to select rooftops that offer an evenly distributed environmental benefit rather than favoring one specific concern.
+
 | Input | Value | 
 |:---------:|:---------:|
 |  Budget  |  30'000'000€  |
 |  Temperature weight  |  3  |
 |  Pollution weight  |  3  |
 |  Precipitation weight  |  3  |
+
 Below is the output of the algorithm selecting only municipally owned roofs:
 ![10MilCom](images/30Mil.png)
 
