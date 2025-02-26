@@ -64,7 +64,7 @@ If a station collects multiple parameters (e.g., precipitation and pollution), e
 ### 2. Computation of Impact Indices for Each Rooftop
 For each rooftop identified in the GeoJSON dataset provided by the Municipality of Milan let's calculate an impact index on all three environmental issues. This is done by computing, for each environmental parameter (temperature, precipitation, pollution), a weighted average of the two nearest stations, where the weight is inversely proportional to the rooftop-station distance:
     
-    \[ I = \frac{V_1 \cdot w_1 + V_2 \cdot w_2}{w_1 + w_2} \]
+    $$ I = \frac{V_1 \cdot w_1 + V_2 \cdot w_2}{w_1 + w_2} $$
     
 Where:
     - \( V_1 \) and \( V_2 \) are the environmental values from the two closest stations
