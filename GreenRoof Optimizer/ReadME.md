@@ -68,8 +68,8 @@ I = \frac{V_1 \cdot w_1 + V_2 \cdot w_2}{w_1 + w_2}
 ```
     
 Where:
-    - \( V_1 \) and \( V_2 \) are the environmental values from the two closest stations
-    - \( w_1 \) and \( w_2 \) are the weights, computed as the inverse of the distance between the rooftop and the station (\( w_i = \frac{1}{d_i} \))
+- $V_1$ and $V_2 $ are the environmental values from the two closest stations
+- \( w_1 \) and \( w_2 \) are the weights, computed as the inverse of the distance between the rooftop and the station (\( w_i = \frac{1}{d_i} \))
 ### 3. Normalization of Indices
 Impact indices are normalized to a range between 0 and 1 to ensure comparability. Normalization is performed based on the minimum and maximum values within the dataset:
     
