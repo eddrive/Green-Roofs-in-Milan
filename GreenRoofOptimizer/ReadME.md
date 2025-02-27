@@ -128,3 +128,23 @@ In this scenario, we distribute equal weight across temperature reduction, pollu
 Below is the output of the algorithm selecting only municipally owned roofs:
 ![10MilCom](images/30Mil.png)
 
+## Future Developments
+### Improving Cost Estimation
+Currently, the model estimates the cost of green roof conversion using a fixed price per square meter, considering only the addition of a grass layer. However, real-world implementation costs may vary significantly based on factors such as structural reinforcements, irrigation systems, and the type of vegetation used. Future developments will focus on refining these estimates by incorporating:
+
+- Real construction and maintenance costs from existing green roof projects.
+- Different types of green roof solutions (e.g., extensive vs. intensive).
+- Economies of scale when implementing multiple green roofs within the same area. This will provide a more realistic financial outlook for decision-makers, ensuring that budget allocation is optimized.
+
+### Simulating Alternative Scenarios
+To quantify the real impact of green roof interventions, we aim to develop a predictive model that simulates how environmental conditions would have evolved if suggested green roof conversions had been implemented two years ago. By leveraging time-series forecasting techniques, we can compare simulated historical data with actual recorded values, enabling a direct assessment of:
+
+- The reduction in peak summer temperatures.
+- The mitigation of flood risks in areas with heavy precipitation.
+- The improvement in air quality due to NO₂ absorption.
+
+This retrospective analysis will provide stakeholders with concrete evidence of the effectiveness of green roof adoption, strengthening the case for future investments in sustainable urban infrastructure.
+
+## Requirements
+
+## USage
