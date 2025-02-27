@@ -1,0 +1,79 @@
+{
+    "stations": {
+      "temperature": {
+        "Lambrate": {
+          "value": 25.57620528771384,
+          "coordinates": [45.484487, 9.235886]
+        },
+        "Piazza Zavattari": {
+          "value": 26.401892744479493,
+          "coordinates": [45.4722, 9.1504]
+        },
+        "via Juvara": {
+          "value": 26.259316770186334,
+          "coordinates": [45.4754, 9.2101]
+        },
+        "viale Marche": {
+          "value": 25.99247648902821,
+          "coordinates": [45.4962997436523, 9.19083976745605]
+        },
+        "via Brera": {
+          "value": 26.015273311897108,
+          "coordinates": [45.4689, 9.188]
+        }
+      },
+      "precipitation": {
+        "Lambrate": {
+          "value": 2.362636932707355,
+          "coordinates": [45.484487, 9.235886]
+        },
+        "via Rosellini": {
+          "value": 2.264397496087637,
+          "coordinates": [45.5115, 9.2339]
+        },
+        "via Juvara": {
+          "value": 1.8110328638497653,
+          "coordinates": [45.4754, 9.2101]
+        },
+        "via Brera": {
+          "value": 1.9787167449139278,
+          "coordinates": [45.4689, 9.188]
+        },
+        "Piazzale Zavattari": {
+          "value": 2.2778951486697965,
+          "coordinates": [45.4722, 9.1504]
+        }
+      },
+      "pollution": {
+        "via Pascal": {
+          "value": 60.53022339027595,
+          "coordinates": [45.4740982055664, 9.23478031158447]
+        },
+        "viale Liguria": {
+          "value": 78.14209827357237,
+          "coordinates": [45.4441986083984, 9.16944026947021]
+        },
+        "viale Marche": {
+          "value": 81.1072821846554,
+          "coordinates": [45.4962997436523, 9.19083976745605]
+        },
+        "via Senato": {
+          "value": 64.76353092783505,
+          "coordinates": [45.4705009460449, 9.19791984558105]
+        },
+        "Verziere": {
+          "value": 63.41454081632653,
+          "coordinates": [45.4635009765625, 9.19534015655518]
+        }
+      }
+    },
+    
+    "input": {
+      "budget": null,
+      "cost": null,
+      "temperature_weight": null,
+      "precipitation_weight": null,
+      "pollution_weight": null
+    }
+  }
+  
