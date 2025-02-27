@@ -6,7 +6,7 @@ A smart advisor that analyzes precipitation, temperature, and pollution data acr
 - [Data Analysis](#data-analysis)
 - [Algorithm](#algorithm)
 - [Results](#results)
-- [Future Developments](future-developments)
+- [Future Developments](#future-developments)
 - [Requirements](#requirements)
 - [Usage](#usage)
 
