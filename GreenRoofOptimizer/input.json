@@ -70,7 +70,7 @@
     
     "input": {
       "budget": null,
-      "cost": null,
+      "cost": 80,
       "temperature_weight": null,
       "precipitation_weight": null,
       "pollution_weight": null

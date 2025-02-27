@@ -11,32 +11,12 @@ def haversine(lat1, lon1, lat2, lon2):
          math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2)
     return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-def calculate_weighted_mean(element, index_type, locations, station_values):
-    """
-    Calculates the weighted mean of index values for a given element and index type.
-    """
-    centroid = element.centroid
-    element_coords = (centroid.y, centroid.x)
-    stations = locations.get(index_type, {})
-    
-    distances = {
-        station: haversine(element_coords[0], element_coords[1], coords[0], coords[1])
-        for station, coords in stations.items()
-    }
-    
-    closest_stations = sorted(distances.items(), key=lambda x: x[1])[:2]
-    weights = {station: 1 / distance if distance != 0 else 1e6 for station, distance in closest_stations}
-    total_weight = sum(weights.values())
-    normalized_weights = {station: weight / total_weight for station, weight in weights.items()}
-    
-    return sum(station_values.get(index_type, {}).get(station, 0) * normalized_weights[station]
-               for station in normalized_weights)
-
 def calculate_weighted_indices(geojson, input_json):
     """
     Computes weighted indices for temperature, pollution, and precipitation.
     """
-    gdf = gpd.read_file(geojson) if isinstance(geojson, str) else geojson
+    gdf = gpd.read_file(geojson)
+    gdf = gdf.drop(columns=["IMPACT", "NOTE", "legenda1"], errors='ignore')
     
     with open(input_json, 'r') as f:
         data = json.load(f)
@@ -53,7 +33,7 @@ def calculate_general_index(geojson, input_json):
     """
     Computes a general index as a weighted sum of normalized indices.
     """
-    gdf = gpd.read_file(geojson) if isinstance(geojson, str) else geojson
+    gdf = gpd.read_file(geojson)
     
     with open(input_json, 'r') as f:
         data = json.load(f)['input']
@@ -75,11 +55,14 @@ def calculate_general_index(geojson, input_json):
     
     return gdf
 
-def calculate_total_cost(geojson, cost_per_square_meter):
+def calculate_total_cost(geojson, input_json):
     """
     Computes the total cost for each element in the GeoDataFrame.
     """
-    gdf = gpd.read_file(geojson) if isinstance(geojson, str) else geojson
+    gdf = gpd.read_file(geojson)
+
+    with open(input_json, 'r') as f:
+        cost_per_square_meter = json.load(f)['input']['cost']
     
     if 'area' not in gdf.columns:
         raise KeyError("The 'area' field is missing in the GeoJSON.")
@@ -92,7 +75,7 @@ def select_elements_within_budget(geojson, input_json, only_comune_milano=False)
     """
     Selects elements within budget, sorted by the general index.
     """
-    gdf = gpd.read_file(geojson) if isinstance(geojson, str) else geojson
+    gdf = gpd.read_file(geojson)
     
     with open(input_json, 'r') as f:
         budget = json.load(f)['input']['budget']
@@ -115,7 +98,11 @@ def select_elements_within_budget(geojson, input_json, only_comune_milano=False)
     return gpd.GeoDataFrame(selected_elements, crs=gdf.crs)
 
 # Example usage
+gdf = "ds1446_Tetti_verdi_potenziali.geojson"
 updated_gdf = calculate_weighted_indices(gdf, "input.json")
 updated_gdf = calculate_general_index(updated_gdf, "input.json")
-updated_gdf = calculate_total_cost(updated_gdf, cost_per_square_meter=80)
+updated_gdf = calculate_total_cost(updated_gdf, "input.json")
 selected_rooftops = select_elements_within_budget(updated_gdf, "input.json", only_comune_milano=True)
+
+# Save the selected rooftops to a new GeoJSON file
+selected_rooftops.to_file("Tetti_verdi_selezionati.geojson", driver="GeoJSON")
