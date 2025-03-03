@@ -147,7 +147,7 @@ def select_elements_within_budget(gdf, input_json):
     
     return gpd.GeoDataFrame(selected_elements, crs=gdf.crs)
 
-def visualize_on_map(geojson_path, map_center=[45.4642, 9.1900], zoom_start=12):
+def visualize_on_map(geojson_path, map_center=[45.4642, 9.1900], zoom_start=12, output_path="Selected_Rooftops_Map.html"):
     """
     Visualizes a GeoJSON file on an interactive map using Folium.
     
@@ -155,6 +155,7 @@ def visualize_on_map(geojson_path, map_center=[45.4642, 9.1900], zoom_start=12):
         geojson_path (str): Path to the GeoJSON file to visualize.
         map_center (list): Coordinates [lat, lon] to center the map.
         zoom_start (int): Initial zoom level for the map.
+        output_path (str): The file path to save the HTML map.
     """
     # Create a Folium map centered on Milan
     m = folium.Map(location=map_center, zoom_start=zoom_start)
@@ -191,8 +192,9 @@ def visualize_on_map(geojson_path, map_center=[45.4642, 9.1900], zoom_start=12):
     folium.LayerControl().add_to(m)
 
     # Save and display the map
-    m.save("Selected_Rooftops_Map.html")
-    print("Map saved as 'Selected_Rooftops_Map.html'")
+    m.save(output_path)
+    print(f"Map saved as '{output_path}'")
+
 
 
 # Example usage
@@ -202,7 +204,26 @@ updated_gdf = calculate_general_index(updated_gdf, "input.json")
 updated_gdf = calculate_total_cost(updated_gdf, "input.json")
 selected_rooftops = select_elements_within_budget(updated_gdf, "input.json")
 
-# Save the selected rooftops to a new GeoJSON file
-selected_rooftops.to_file("tetti_verdi_selezionati.geojson", driver="GeoJSON")
+with open("input.json", 'r') as f:
+    data = json.load(f)['input']
 
-visualize_on_map("tetti_verdi_selezionati.geojson")
+budget = data['budget']
+temperature_weight = data['temperature_weight']
+precipitation_weight = data['precipitation_weight']
+pollution_weight = data['pollution_weight']
+municipal_only = data['only_comune_milano']
+
+municipal_tag = 'Municipal' if municipal_only else 'All'
+
+output_name = f"SelectedGR_{budget}_Temp{temperature_weight}_Prec{precipitation_weight}_Pol{pollution_weight}_{municipal_tag}"
+
+# Generate filenames
+geojson_output = f"{output_name}.geojson"
+html_output = f"{output_name}.html"
+
+# Save the selected rooftops to a new GeoJSON file
+selected_rooftops.to_file(geojson_output, driver="GeoJSON")
+
+# Visualize the result on an interactive map
+visualize_on_map(geojson_path=geojson_output, output_path=html_output)
+
