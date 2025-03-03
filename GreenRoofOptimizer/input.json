@@ -69,11 +69,11 @@
     },
     
     "input": {
-      "budget": 10000000,
+      "budget": 40000000,
       "only_comune_milano" : true,
       "cost": 80,
       "temperature_weight": 3,
-      "precipitation_weight": 5,
+      "precipitation_weight": 3,
       "pollution_weight": 3
     }
   }
