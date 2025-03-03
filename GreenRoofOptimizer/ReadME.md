@@ -164,6 +164,67 @@ pip install geopandas folium
 |geopandas |	>=0.12 |	For handling and processing GeoJSON data |
 |folium |	>=0.14 |	For generating interactive maps in HTML |
 
+### Required Files
+The algorithm requires the presence of two specific files in the script's directory:
 
+- ds1446_tetti_verdi_potenziali.geojson: This [GeoJSON file](https://dati.comune.milano.it/dataset/ds1446_tetti-verdi-potenziali) file, provided by the Municipality of Milan, contains all potential rooftops that could be converted into green roofs.
+- input.json: This JSON file holds both the environmental data and the algorithm configuration parameters.
 
 ## Usage
+
+To obtain the recommended rooftops for green roof conversion, you need to run the algorithm by executing the following command in the terminal:
+
+```bash
+python greenRoofOptimizer.py
+```
+
+### Algorithm Configuration
+The "input" section in input.json defines key parameters for the algorithm:
+
+| Parameter | Description | 
+|:---------:|:---------:|
+|  budget  |  The maximum budget available for the green roof conversion project (in Euros).  |
+|  only_comune_milano  |  If set to true, the algorithm will only consider rooftops owned by the Municipality of Milan.  |
+|  cost  |  The conversion cost per square meter (€/m²).  |
+|  temperature_weight  |  Weight assigned to temperature reduction as a priority for green roof selection, assign a value between 0 and 5|
+|  precipitation_weight  |  Weight assigned to flood mitigation and stormwater management through green roofs, assign a value between 0 and 5  |
+|  pollution_weight  |  Weight assigned to improving air quality by reducing NO₂ pollution with green roofs, assign a value between 0 and 5  |	
+	
+All these parameters can be modified to suit your project's objectives. Other sections of the input.json file, which contain environmental data and station coordinates, should not be modified manually unless you are updating the dataset with new monitoring data.
+
+This is an example for reference:
+```json
+"input": {
+    "budget": 30000000,
+    "only_comune_milano": true,
+    "cost": 80,
+    "temperature_weight": 3,
+    "precipitation_weight": 3,
+    "pollution_weight": 3
+}
+```
+
+### Output
+After running the script, the algorithm will generate two output files:
+
+- A GeoJSON file with the selected rooftops
+- An HTML file with an interactive map visualization
+
+The output files follow a structured naming pattern that reflects the input parameters:
+
+```bash
+SelectedGR_<BUDGET>_Temp<TEMP_WEIGHT>_Prec<PREC_WEIGHT>_Pol<POLL_WEIGHT>_<PROPERTY_SCOPE>.geojson
+```
+- <BUDGET>: The maximum budget for green roof conversion.
+- <TEMP_WEIGHT>, <PREC_WEIGHT>, <POLL_WEIGHT>: The weights assigned to temperature, precipitation, and pollution priorities, respectively.
+- <PROPERTY_SCOPE>: Indicates whether only municipal rooftops (Municipal) or all rooftops (All) were considered.
+For example, the file name:
+```bash
+SelectedGR_30000000_Temp3_Prec3_Pol3_Municipal.geojson
+```
+Indicates that:
+
+- The budget was 30,000,000€.
+- The algorithm gave equal priority to temperature, precipitation, and pollution (all weights set to 3).
+- The selection included only municipally owned rooftops.
+This naming approach ensures that the output files are not only unique but also self-explanatory, allowing for quick identification of the scenario and configuration used to generate them.
