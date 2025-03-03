@@ -146,5 +146,24 @@ To quantify the real impact of green roof interventions, we aim to develop a pre
 This retrospective analysis will provide stakeholders with concrete evidence of the effectiveness of green roof adoption, strengthening the case for future investments in sustainable urban infrastructure.
 
 ## Requirements
+To run this script, ensure you have the following packages installed:
+
+### Python Version
+Python 3.8 or higher
+### Required Libraries
+Install the required Python libraries using pip:
+
+```bash
+# Comando per installare le dipendenze
+pip install geopandas folium matplotlib
+		
+| Library | Version | Description |
+|:---------:|:---------:|:---------:|
+|math |	Built-in |	Provides mathematical functions |
+|json |	Built-in |	Handles JSON file input and output |
+|geopandas |	>=0.12 |	For handling and processing GeoJSON data |
+|folium |	>=0.14 |	For generating interactive maps in HTML |
+
+
 
 ## Usage
