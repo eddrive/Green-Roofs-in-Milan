@@ -120,7 +120,7 @@ In this scenario, we distribute equal weight across temperature reduction, pollu
 
 | Input | Value | 
 |:---------:|:---------:|
-|  Budget  |  30'000'000€  |
+|  Budget  |  40'000'000€  |
 |  Temperature weight  |  3  |
 |  Pollution weight  |  3  |
 |  Precipitation weight  |  3  |
