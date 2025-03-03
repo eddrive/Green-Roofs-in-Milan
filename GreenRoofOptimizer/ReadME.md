@@ -154,7 +154,7 @@ Python 3.8 or higher
 Install the required Python libraries using pip:
 
 ```bash
-pip install geopandas folium matplotlib
+pip install geopandas folium
 ```
 		
 | Library | Version | Description |
