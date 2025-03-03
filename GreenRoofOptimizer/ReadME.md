@@ -215,7 +215,7 @@ The output files follow a structured naming pattern that reflects the input para
 ```bash
 SelectedGR_<BUDGET>_Temp<TEMP_WEIGHT>_Prec<PREC_WEIGHT>_Pol<POLL_WEIGHT>_<PROPERTY_SCOPE>.geojson
 ```
-- <BUDGET>: The maximum budget for green roof conversion.
+-  <BUDGET>: The maximum budget for green roof conversion.
 - <TEMP_WEIGHT>, <PREC_WEIGHT>, <POLL_WEIGHT>: The weights assigned to temperature, precipitation, and pollution priorities, respectively.
 - <PROPERTY_SCOPE>: Indicates whether only municipal rooftops (Municipal) or all rooftops (All) were considered.
 For example, the file name:
